@@ -11,8 +11,24 @@ const EditBook = () => {
  const [loading, setLoading] = useState(false);
 const navigate = useNavigate();
 const {id} = useParams();
+useEffect (()=>{
+setLoading(true);
+axios.get(`http://localhost:5555/books/${id}`)
+.then((response)=>{
+  setAuthor(response.data.author)
+  setTitle(response.data.title)
+  setPublishYear(response.data.publishYear)
+  setLoading(false);
 
-const handleSaveBook = ()=>{
+}
+
+).catch((error)=>{
+  setLoading(false)
+  alert('An error happened: Please check your console')
+  console.log(error)
+})
+},[])
+const handleEditBook = ()=>{
   const data = {
     title,
     author,
@@ -20,7 +36,7 @@ const handleSaveBook = ()=>{
   };
   setLoading(true);
   axios
-  .post('http://localhost:5555/books', data)
+  .put(`http://localhost:5555/books/${id}`, data)
   .then(()=>{
     setLoading(false);
     navigate('/');
@@ -63,7 +79,7 @@ const handleSaveBook = ()=>{
           className='border-2 border-gray-500 px-4 py-2 w-full'
           />
         </div>
-        <button className='p-2 bg-sky-300 m-8'onClick={handleSaveBook}>
+        <button className='p-2 bg-sky-300 m-8'onClick={handleEditBook}>
         Save
       </button>
       </div>
